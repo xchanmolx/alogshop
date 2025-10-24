@@ -6,13 +6,19 @@ import { MatDialog } from "@angular/material/dialog";
 import { FiltersDialogComponent } from './filters-dialog/filters-dialog.component';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
 
 @Component({
   selector: 'app-shop',
   imports: [
     ProductItemComponent,
     MatButton,
-    MatIcon
+    MatIcon,
+    MatMenu,
+    MatSelectionList,
+    MatListOption,
+    MatMenuTrigger
 ],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss'
@@ -37,10 +43,22 @@ export class ShopComponent implements OnInit {
   initializeShop() {
     this.shopService.getBrands();
     this.shopService.getTypes();
-    this.shopService.getProducts().subscribe({
+    this.getProducts();
+  }
+
+  getProducts() {
+    this.shopService.getProducts(this.selectedBrands, this.selectedTypes, this.selectedSort).subscribe({
       next: response => this.products = response.data,
       error: error => console.error('There was an error!', error)
     });
+  }
+
+  onSortChange(event: MatSelectionListChange) {
+    const selectedOption = event.options[0];
+    if (selectedOption) {
+      this.selectedSort = selectedOption.value;
+      this.getProducts();
+    }
   }
 
   openFilterDialog() {
@@ -57,10 +75,7 @@ export class ShopComponent implements OnInit {
           this.selectedBrands = result.selectedBrands;
           this.selectedTypes = result.selectedTypes;
           // You can add logic here to filter products based on selectedBrands and selectedTypes
-          this.shopService.getProducts(this.selectedBrands, this.selectedTypes).subscribe({
-            next: response => this.products = response.data,
-            error: error => console.error('There was an error!', error)
-          });
+          this.getProducts();
         }
       }
     });

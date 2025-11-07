@@ -27,6 +27,8 @@ export class ProductDetailsComponent implements OnInit {
   private shopService = inject(ShopService);
   private activatedRoute = inject(ActivatedRoute);
   product?: Product;
+  quantityInCart = 0;
+  quantity = 1;
 
   ngOnInit(): void {
     this.loadProduct();

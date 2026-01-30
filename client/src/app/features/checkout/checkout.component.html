@@ -1,6 +1,9 @@
 <div class="flex mt-32 gap-6">
     <div class="w-3/4">
-        <mat-stepper #stepper class="bg-white border border-gray-200 shadow-sm">
+        <mat-stepper 
+            (selectionChange)="onStepChage($event)"
+            #stepper
+            class="bg-white border border-gray-200 shadow-sm">
             <mat-step label="Address">
                 <div id="address-element"></div>
                 <div class="flex justify-end mt-1">
